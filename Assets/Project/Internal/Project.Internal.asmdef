@@ -1,0 +1,17 @@
+{
+    "name": "Project.Internal",
+    "rootNamespace": "Project.Internal",
+    "references": [
+        "Unity.InputSystem",
+        "Project.External"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

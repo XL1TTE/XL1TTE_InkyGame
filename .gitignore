@@ -1,0 +1,37 @@
+# Unity generated files
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+
+# Visual Studio / Rider
+.vs/
+*.sln
+*.user
+*.userprefs
+*.suo
+*.tmp
+*.pidb
+*.userprefs
+*.sln.docstates
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# Others
+*.tmproj
+*.pidb.meta
+*.pdb
+*.mdb
+*.opendb
+*.sln.ide
