@@ -34,6 +34,9 @@ namespace Project.Internal.UI
         [HideInInspector] protected Tween _scaleDownTween;
 
 
+        [HideInInspector] protected InputActionReference NavigationScheme;
+
+
 
         /// <summary>
         /// Initialize default selectables state
@@ -41,6 +44,15 @@ namespace Project.Internal.UI
         /// 
         public void Init()
         {
+            if (InputManager.instance != null)
+            {
+                NavigationScheme = InputManager.instance.UI_NavigationScheme;
+            }
+            else
+            {
+                Debug.LogWarning("InputManager was not initialized...");
+            }
+
             foreach (var sel in _selectables)
             {
                 _defaultScales.TryAdd(sel, sel.gameObject.transform.localScale);
@@ -50,7 +62,10 @@ namespace Project.Internal.UI
 
         void OnEnable()
         {
-            InputManager.instance.UI_NavigationScheme.action.performed += OnNavigate;
+            if (NavigationScheme != null)
+            {
+                NavigationScheme.action.performed += OnNavigate;
+            }
             foreach (var sel in _selectables)
             {
                 if (_defaultScales.TryGetValue(sel, out var default_scale))
@@ -64,7 +79,10 @@ namespace Project.Internal.UI
 
         void OnDisable()
         {
-            InputManager.instance.UI_NavigationScheme.action.performed -= OnNavigate;
+            if (NavigationScheme != null)
+            {
+                NavigationScheme.action.performed += OnNavigate;
+            }
             _scaleUpTween.Kill(true);
             _scaleDownTween.Kill(true);
         }

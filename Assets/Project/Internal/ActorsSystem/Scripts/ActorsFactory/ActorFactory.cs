@@ -10,6 +10,12 @@ namespace Project.Internal.ActorSystem
 
         public static bool TryBuildHero(string actorID, bool isDisableByDefault, out Hero hero)
         {
+            if (ActorsVisualsRegistry.instance == null)
+            {
+                Debug.LogWarning("ActorVisualsRegistry was not initialized, so ActorBuilder won't be able to work...");
+                hero = null;
+                return false;
+            }
             var HeroPrefab = ActorsVisualsRegistry.instance.GetHeroPrefabByID(actorID);
 
             if (HeroPrefab != null)
