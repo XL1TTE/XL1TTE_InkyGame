@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Project.Internal.ActorSystem;
 using Project.Internal.Interactions;
 using Project.Internal.UI;
 using Project.Internal.Utilities;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Project.Internal.BattleSystem
 {
@@ -34,13 +36,19 @@ namespace Project.Internal.BattleSystem
         }
         public IEnumerator OnInitStart(BattleManager context)
         {
-            // SPAWNING Heroes
-            foreach (var slot in context.HeroesSlots)
+            for (int i = 0; i < context.HeroesToSpawn.Count; i++)
             {
-                Object.Instantiate(context.HeroPrefab, slot);
-                yield return new WaitForSeconds(1);
+
+                if (ActorFactory.TryBuildHero(context.HeroesToSpawn[i], true, out var hero))
+                {
+                    var hero_info = hero.GetActorData<HeroData>();
+                    Debug.Log($"Spawning {hero.ActorID}... His name is {hero_info.ActorName}\n{hero_info.GetAllStatsInString()}");
+                    yield return new WaitForSeconds(1);
+                    SpawnerUtility.SpawnItemIn(hero.gameObject, context.HeroesSlots[i], true);
+                }
             }
 
+            yield return null;
         }
     }
 
@@ -76,8 +84,8 @@ namespace Project.Internal.BattleSystem
         [SerializeField] public List<Transform> EnemiesSlots;
 
         [Header("Heroes setup")]
-        [SerializeField] public GameObject HeroPrefab;
         [SerializeField] public List<Transform> HeroesSlots;
+        [SerializeField] public List<string> HeroesToSpawn = new List<string>(3);
 
 
         [Header("TO REMOVE LATER")]

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Project.Internal.ActorSystem;
 using Project.Internal.Interactions;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ namespace Project.Internal.System
             //context.GameLoadingScreen.SetActive(true);
 
             yield return context.InputManager.Init();
+
+            yield return context.ActorsVisualsRegistry.Init();
 
             //context.GameLoadingScreen.SetActive(false);
         }
@@ -30,6 +33,7 @@ namespace Project.Internal.System
     public class GameInitializer : MonoBehaviour
     {
         [SerializeField] public InputManager InputManager;
+        [SerializeField] public ActorsVisualsRegistry ActorsVisualsRegistry;
 
 
         [Header("Game initializing setups")]

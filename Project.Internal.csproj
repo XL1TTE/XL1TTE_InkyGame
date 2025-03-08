@@ -64,16 +64,28 @@
     <Analyzer Include="D:\Unity\2022.3.45f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\Hero.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsData\EnemyData.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsData\HeroData.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsRegistry\ActorsVisualsRegistry.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsFactory\ActorFactory.cs" />
     <Compile Include="Assets\Project\Internal\Interactions\InteractionBase.cs" />
     <Compile Include="Assets\Project\Internal\UI\DynamicelectablesEventHandler.cs" />
     <Compile Include="Assets\Project\Internal\System\Scripts\InputManager.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorStats\HeroStats.cs" />
     <Compile Include="Assets\Project\Internal\BattleSystem\Scripts\BattleManager.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsData\BaseActorData.cs" />
     <Compile Include="Assets\Project\Internal\Interactions\InteractionManager.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsRegistry\ActorsDataRegistry.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\BaseActor.cs" />
     <Compile Include="Assets\Project\Internal\OtherScripts\ConstantObject.cs" />
     <Compile Include="Assets\Project\Internal\Utilities\SelectableNavigationUtility.cs" />
+    <Compile Include="Assets\Project\Internal\Utilities\SpawnerUtility.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorStats\BaseActorStats.cs" />
     <Compile Include="Assets\Project\Internal\Interactions\InteractionsInterfaces.cs" />
     <Compile Include="Assets\Project\Internal\System\GameInitializer.cs" />
     <Compile Include="Assets\Project\Internal\Utilities\ReflectionUtility.cs" />
+    <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorStats\EnemyStats.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Project\Internal\Project.Internal.asmdef" />
