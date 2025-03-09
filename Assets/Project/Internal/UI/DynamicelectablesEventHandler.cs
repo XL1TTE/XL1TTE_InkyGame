@@ -91,6 +91,11 @@ namespace Project.Internal.UI
         /// </summary>
         public void EnableBehaviour()
         {
+            if (NavigationScheme != null)
+            {
+                NavigationScheme.action.performed += OnNavigate;
+            }
+
             foreach (var sel in _selectables)
             {
                 AddListeners(sel);

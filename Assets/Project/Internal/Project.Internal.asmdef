@@ -3,7 +3,8 @@
     "rootNamespace": "Project.Internal",
     "references": [
         "Unity.InputSystem",
-        "Project.External"
+        "Project.External",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

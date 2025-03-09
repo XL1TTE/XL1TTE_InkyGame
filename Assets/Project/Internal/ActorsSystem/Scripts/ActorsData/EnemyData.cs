@@ -9,9 +9,21 @@ namespace Project.Internal.ActorSystem
     public class EnemyData : BaseActorData
     {
         public EnemyStats Stats { get; set; }
-        public override EnemyData Clone<EnemyData>()
+        public override T Clone<T>()
         {
-            return Activator.CreateInstance(this.GetType()) as EnemyData;
+            var clone = new EnemyData();
+            clone.ActorID = this.ActorID;
+            clone.ActorName = this.ActorName;
+            clone.Stats = this.Stats;
+            return clone as T;
         }
+
+
+        public override string GetAllStatsInString()
+        {
+            var stats = $"Health: {Stats.Health}\nPhysical Damage: {Stats.PhysicalDamage}\nAttributes:\nStrenght: {Stats.Attributes.Strenght}\nDexterity: {Stats.Attributes.Dexterity}\nIntelligence{Stats.Attributes.Intelligence}";
+            return stats;
+        }
+
     }
 }

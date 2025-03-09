@@ -10,41 +10,66 @@ using UnityEngine.AI;
 namespace Project.Internal.BattleSystem
 {
 
-
-    public class TestEnemiesSpawnInteraction : InteractionBase, IOnBattleInitStart
+    public class BattleStatesInitialization : InteractionBase, IOnBattleInitStart
     {
         public override Priorities Priority()
         {
             return Priorities.very_low;
         }
+
         public IEnumerator OnInitStart(BattleManager context)
         {
-            // SPAWNING ENEMIES
-            foreach (var slot in context.EnemiesSlots)
+            context.CurrentBattleState = new PlayerTurnBattleState(context.EnemiesInBattle, context.HeroesInBattle);
+            context.CurrentBattleState.ApplyStateLogic();
+
+            yield return null;
+        }
+    }
+
+    public class EnemiesInitInteraction : InteractionBase, IOnBattleInitStart
+    {
+        public override Priorities Priority()
+        {
+            return Priorities.high;
+        }
+        public IEnumerator OnInitStart(BattleManager context)
+        {
+
+            for (int i = 0; i < context.EnemiesSlots.Count; i++)
             {
-                Object.Instantiate(context.EnemyPrefab, slot);
-                yield return new WaitForSeconds(1);
+                var enemy_to_spawn = context.EnemiesToSpawn[i];
+
+                if (ActorFactory.TryBuildEnemy(enemy_to_spawn.ActorDataID, enemy_to_spawn.ActorVisualID, true, out var enemy))
+                {
+                    var enemy_data = enemy.GetActorData<EnemyData>();
+                    Debug.Log($"Spawning {enemy.ActorID}... His name is {enemy_data.ActorName}\n{enemy_data.GetAllStatsInString()}");
+
+
+                    context.EnemiesInBattle.Add(enemy);
+                    yield return null;
+                }
             }
 
         }
     }
-    public class TestHeroesSpawnInteraction : InteractionBase, IOnBattleInitStart
+    public class HeroesInitInteraction : InteractionBase, IOnBattleInitStart
     {
         public override Priorities Priority()
         {
-            return Priorities.low;
+            return Priorities.high;
         }
         public IEnumerator OnInitStart(BattleManager context)
         {
             for (int i = 0; i < context.HeroesToSpawn.Count; i++)
             {
-
-                if (ActorFactory.TryBuildHero(context.HeroesToSpawn[i], true, out var hero))
+                var actor_spawn_info = context.HeroesToSpawn[i];
+                if (ActorFactory.TryBuildHero(actor_spawn_info.ActorDataID, actor_spawn_info.ActorVisualID, true, out var hero))
                 {
                     var hero_info = hero.GetActorData<HeroData>();
-                    Debug.Log($"Spawning {hero.ActorID}... His name is {hero_info.ActorName}\n{hero_info.GetAllStatsInString()}");
-                    yield return new WaitForSeconds(1);
-                    SpawnerUtility.SpawnItemIn(hero.gameObject, context.HeroesSlots[i], true);
+                    Debug.Log($"Initialize {hero.ActorID}... His name is {hero_info.ActorName}\n{hero_info.GetAllStatsInString()}");
+
+                    context.HeroesInBattle.Add(hero);
+                    yield return null;
                 }
             }
 
@@ -57,12 +82,36 @@ namespace Project.Internal.BattleSystem
     {
         public IEnumerator OnBattleReady(BattleManager context)
         {
+
+
+            // Spawning Heroes
+            var slot_i = 0;
+            foreach (var hero in context.HeroesInBattle)
+            {
+                SpawnerUtility.SpawnItemIn(hero.gameObject, context.HeroesSlots[slot_i], true);
+                slot_i++;
+                yield return new WaitForSeconds(1);
+            }
+
+            // Spawning Enemies
+            slot_i = 0;
+            foreach (var enemy in context.EnemiesInBattle)
+            {
+                SpawnerUtility.SpawnItemIn(enemy.gameObject, context.EnemiesSlots[slot_i], true);
+                slot_i++;
+                yield return new WaitForSeconds(1);
+            }
+
+
+            // Play preFightAnimation
             context.PreFightAnimationObject.SetActive(true);
+
             yield return new WaitForSeconds(3);
 
             context.PreFightAnimationObject.SetActive(false);
 
 
+            // TO REWORK!!!
             Debug.LogWarning("Don't forget to rework the ui skills setup.");
             context.Skills.Init();
 
@@ -79,17 +128,26 @@ namespace Project.Internal.BattleSystem
 
 
         [Header("Enemies setup")]
-
-        [SerializeField] public GameObject EnemyPrefab;
         [SerializeField] public List<Transform> EnemiesSlots;
+        [SerializeField] public List<ActorFactoryRequest> EnemiesToSpawn;
 
         [Header("Heroes setup")]
         [SerializeField] public List<Transform> HeroesSlots;
-        [SerializeField] public List<string> HeroesToSpawn = new List<string>(3);
+        [SerializeField] public List<ActorFactoryRequest> HeroesToSpawn;
 
 
         [Header("TO REMOVE LATER")]
         [SerializeField] public DynamicSelectablesEventHandler Skills;
+
+
+
+        #region BattleStatesData
+        public List<Enemy> EnemiesInBattle = new();
+        public List<Hero> HeroesInBattle = new();
+
+
+        public BaseBattleState CurrentBattleState;
+        #endregion
 
         IEnumerator Start()
         {

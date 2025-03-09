@@ -8,9 +8,13 @@ namespace Project.Internal.ActorSystem
     public class HeroData : BaseActorData
     {
         public HeroStats Stats { get; set; }
-        public override HeroData Clone<HeroData>()
+        public override T Clone<T>()
         {
-            return Activator.CreateInstance(this.GetType()) as HeroData;
+            var clone = new HeroData();
+            clone.ActorID = this.ActorID;
+            clone.ActorName = this.ActorName;
+            clone.Stats = this.Stats;
+            return clone as T;
         }
 
 

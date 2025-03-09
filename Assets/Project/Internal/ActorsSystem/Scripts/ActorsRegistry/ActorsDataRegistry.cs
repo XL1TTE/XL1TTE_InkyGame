@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace Project.Internal.ActorSystem
@@ -64,18 +65,41 @@ namespace Project.Internal.ActorSystem
         public static List<EnemyData> Enemies = new List<EnemyData>{
             new EnemyData{
                 ActorID = "Witch",
-                ActorName = "Witch"
+                ActorName = "Witch",
+                Stats = new EnemyStats{
+                    Health = 250.0f,
+                    Attributes = new ActorAttributes{
+                        Strenght = 5,
+                        Intelligence = 15,
+                        Dexterity = 5
+                    },
+                    PhysicalDamage = 0f
+                }
             },
             new EnemyData{
                 ActorID = "Wolf",
-                ActorName = "Wolf"
+                ActorName = "Wolf",
+                Stats = new EnemyStats{
+                    Health = 150,
+                    Attributes = new ActorAttributes{
+                        Strenght = 10,
+                        Intelligence = 5,
+                        Dexterity = 15
+                    },
+                    PhysicalDamage = 2f
+                }
             }
         };
 
 
         public static HeroData GetHeroDataByID(string ID)
         {
-            return Heroes.Find(hero => hero.ActorID == ID);
+            return Heroes.Find(hero => hero.ActorID == ID).Clone<HeroData>();
+        }
+
+        public static EnemyData GetEnemyDataByID(string ID)
+        {
+            return Enemies.Find(e => e.ActorID == ID).Clone<EnemyData>();
         }
 
     }

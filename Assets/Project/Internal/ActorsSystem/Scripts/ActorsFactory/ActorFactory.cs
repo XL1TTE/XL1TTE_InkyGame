@@ -8,7 +8,7 @@ namespace Project.Internal.ActorSystem
     public static class ActorFactory
     {
 
-        public static bool TryBuildHero(string actorID, bool isDisableByDefault, out Hero hero)
+        public static bool TryBuildHero(string actorDataID, string actorPrefabID, bool isDisableByDefault, out Hero hero)
         {
             if (ActorsVisualsRegistry.instance == null)
             {
@@ -16,11 +16,11 @@ namespace Project.Internal.ActorSystem
                 hero = null;
                 return false;
             }
-            var HeroPrefab = ActorsVisualsRegistry.instance.GetHeroPrefabByID(actorID);
+            var HeroPrefab = ActorsVisualsRegistry.instance.GetHeroPrefabByID(actorPrefabID);
 
             if (HeroPrefab != null)
             {
-                var HeroData = ActorsDataRegistry.GetHeroDataByID(actorID);
+                var HeroData = ActorsDataRegistry.GetHeroDataByID(actorDataID).Clone<HeroData>();
 
 
                 var buildedHero = Object.Instantiate(HeroPrefab);
@@ -31,8 +31,36 @@ namespace Project.Internal.ActorSystem
                 hero = buildedHero;
                 return true;
             }
-            Debug.LogWarning($"You tried to spawn actor with id:{actorID}, but visual for that id was not registred.");
+            Debug.LogWarning($"You tried to spawn actor with data id:{actorDataID}, but visual with id: {actorPrefabID} was not registred.");
             hero = null;
+            return false;
+        }
+
+        public static bool TryBuildEnemy(string actorDataID, string actorPrefabID, bool isDisableByDefault, out Enemy enemy)
+        {
+            if (ActorsVisualsRegistry.instance == null)
+            {
+                Debug.LogWarning("ActorVisualsRegistry was not initialized, so ActorBuilder won't be able to work...");
+                enemy = null;
+                return false;
+            }
+            var EnemyPrefab = ActorsVisualsRegistry.instance.GetEnemyPrefabByID(actorPrefabID);
+
+            if (EnemyPrefab != null)
+            {
+                var EnemyData = ActorsDataRegistry.GetEnemyDataByID(actorDataID).Clone<EnemyData>();
+
+
+                var buildedEnemy = Object.Instantiate(EnemyPrefab);
+                buildedEnemy.AttachActorData(EnemyData);
+
+                buildedEnemy.gameObject.SetActive(!isDisableByDefault);
+
+                enemy = buildedEnemy;
+                return true;
+            }
+            Debug.LogWarning($"You tried to spawn actor with data id:{actorDataID}, but visual with id: {actorPrefabID} was not registred.");
+            enemy = null;
             return false;
         }
 

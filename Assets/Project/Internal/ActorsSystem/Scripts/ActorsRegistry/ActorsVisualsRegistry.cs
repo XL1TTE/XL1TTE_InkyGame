@@ -13,6 +13,9 @@ namespace Project.Internal.ActorSystem
         [Header("Heroes")]
         [SerializeField] public List<Hero> Heroes = new();
 
+        [Header("Enemies")]
+        [SerializeField] public List<Enemy> Enemies = new();
+
         public IEnumerator Init()
         {
             Debug.Log("Initializing ActorVisualsRegistry....");
@@ -26,6 +29,11 @@ namespace Project.Internal.ActorSystem
         public Hero GetHeroPrefabByID(string ID)
         {
             return Heroes.Find(actor => actor.ActorID == ID);
+        }
+
+        public Enemy GetEnemyPrefabByID(string ID)
+        {
+            return Enemies.Find(e => e.ActorID == ID);
         }
 
     }
