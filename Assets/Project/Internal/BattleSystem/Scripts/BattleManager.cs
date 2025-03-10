@@ -1,16 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using Project.Internal.ActorSystem;
+using Project.Internal.BattleSystem.States;
 using Project.Internal.Interactions;
 using Project.Internal.UI;
 using Project.Internal.Utilities;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Project.Internal.BattleSystem
 {
 
-    public class BattleStatesInitialization : InteractionBase, IOnBattleInitStart
+    public class StatesInitialization : InteractionBase, IOnBattleInitStart
     {
         public override Priorities Priority()
         {
@@ -19,10 +19,9 @@ namespace Project.Internal.BattleSystem
 
         public IEnumerator OnInitStart(BattleManager context)
         {
-            context.CurrentBattleState = new PlayerTurnBattleState(context.EnemiesInBattle, context.HeroesInBattle);
-            context.CurrentBattleState.ApplyStateLogic();
-
-            yield return null;
+            // States initialization
+            yield return BattleStatesManager.Init();
+            BattleStatesManager.SetCurrentState<PlayerTurnBattleState>();
         }
     }
 
@@ -45,11 +44,14 @@ namespace Project.Internal.BattleSystem
                     Debug.Log($"Spawning {enemy.ActorID}... His name is {enemy_data.ActorName}\n{enemy_data.GetAllStatsInString()}");
 
 
+                    context.EnemiesEventHandler.AddSubject(enemy);
+
                     context.EnemiesInBattle.Add(enemy);
                     yield return null;
                 }
             }
 
+            context.EnemiesEventHandler.Apply();
         }
     }
     public class HeroesInitInteraction : InteractionBase, IOnBattleInitStart
@@ -83,7 +85,6 @@ namespace Project.Internal.BattleSystem
         public IEnumerator OnBattleReady(BattleManager context)
         {
 
-
             // Spawning Heroes
             var slot_i = 0;
             foreach (var hero in context.HeroesInBattle)
@@ -110,6 +111,8 @@ namespace Project.Internal.BattleSystem
 
             context.PreFightAnimationObject.SetActive(false);
 
+
+            BattleStatesManager.SetCurrentState<EnemyTurnBattleState>();
 
             // TO REWORK!!!
             Debug.LogWarning("Don't forget to rework the ui skills setup.");
@@ -139,14 +142,12 @@ namespace Project.Internal.BattleSystem
         [Header("TO REMOVE LATER")]
         [SerializeField] public DynamicSelectablesEventHandler Skills;
 
-
-
         #region BattleStatesData
         public List<Enemy> EnemiesInBattle = new();
         public List<Hero> HeroesInBattle = new();
 
+        public EnemiesStatesEventHandler EnemiesEventHandler = new();
 
-        public BaseBattleState CurrentBattleState;
         #endregion
 
         IEnumerator Start()
