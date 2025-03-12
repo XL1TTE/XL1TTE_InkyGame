@@ -9,6 +9,7 @@ namespace Project.Internal.ActorSystem
     {
         [SerializeField] public string ActorID;
         [HideInInspector] protected BaseActorData ActorData;
+        [SerializeField] public Sprite Avatar;
 
 
         public virtual void AttachActorData(BaseActorData actorData)

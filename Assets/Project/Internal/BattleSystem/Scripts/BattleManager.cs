@@ -70,10 +70,14 @@ namespace Project.Internal.BattleSystem
                     var hero_info = hero.GetActorData<HeroData>();
                     Debug.Log($"Initialize {hero.ActorID}... His name is {hero_info.ActorName}\n{hero_info.GetAllStatsInString()}");
 
+                    context.HeroesEventHandler.AddSubject(hero);
+
                     context.HeroesInBattle.Add(hero);
                     yield return null;
                 }
             }
+
+            context.HeroesEventHandler.Apply();
 
             yield return null;
         }
@@ -91,7 +95,7 @@ namespace Project.Internal.BattleSystem
             {
                 SpawnerUtility.SpawnItemIn(hero.gameObject, context.HeroesSlots[slot_i], true);
                 slot_i++;
-                yield return new WaitForSeconds(1);
+                yield return null;
             }
 
             // Spawning Enemies
@@ -100,27 +104,9 @@ namespace Project.Internal.BattleSystem
             {
                 SpawnerUtility.SpawnItemIn(enemy.gameObject, context.EnemiesSlots[slot_i], true);
                 slot_i++;
-                yield return new WaitForSeconds(1);
+                yield return null;
             }
 
-
-            // Play preFightAnimation
-            context.PreFightAnimationObject.SetActive(true);
-
-            yield return new WaitForSeconds(3);
-
-            context.PreFightAnimationObject.SetActive(false);
-
-
-            BattleStatesManager.SetCurrentState<EnemyTurnBattleState>();
-
-            // TO REWORK!!!
-            Debug.LogWarning("Don't forget to rework the ui skills setup.");
-            context.Skills.Init();
-
-            context.StartCoroutine(SelectableNavigationUtility.SetupRowsLikeNavigation(context.Skills._selectables, 7));
-
-            context.Skills.EnableBehaviour();
         }
     }
 
@@ -139,19 +125,25 @@ namespace Project.Internal.BattleSystem
         [SerializeField] public List<ActorFactoryRequest> HeroesToSpawn;
 
 
-        [Header("TO REMOVE LATER")]
-        [SerializeField] public DynamicSelectablesEventHandler Skills;
-
         #region BattleStatesData
-        public List<Enemy> EnemiesInBattle = new();
-        public List<Hero> HeroesInBattle = new();
+        [HideInInspector] public List<Enemy> EnemiesInBattle = new();
+        [HideInInspector] public List<Hero> HeroesInBattle = new();
 
-        public EnemiesStatesEventHandler EnemiesEventHandler = new();
+        public EnemiesStatesEventHandler EnemiesEventHandler;
+        public HeroesStatesEventHandler HeroesEventHandler;
+
+        public BattleUI_Context UI;
 
         #endregion
 
         IEnumerator Start()
         {
+
+            EnemiesEventHandler = new EnemiesStatesEventHandler(this);
+
+            HeroesEventHandler = new HeroesStatesEventHandler(this);
+
+
             InteractionManager interactions = new InteractionManager();
             interactions.Init();
             foreach (var interaction in interactions.FindAllOf<IOnBattleInitStart>())

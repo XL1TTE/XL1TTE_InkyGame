@@ -21,7 +21,17 @@ namespace Project.Internal.ActorSystem
 
         public override string GetAllStatsInString()
         {
-            var stats = $"Health: {Stats.Health}\nPhysical Damage: {Stats.PhysicalDamage}\nAttributes:\nStrenght: {Stats.Attributes.Strenght}\nDexterity: {Stats.Attributes.Dexterity}\nIntelligence{Stats.Attributes.Intelligence}";
+            string Health_color_Hex = "#5d1818";
+            string Attributes_color_Hex = "#27477f";
+            string Damage_color_Hex = "#a8863d";
+
+            var stats = $"<color={Health_color_Hex}>Health: {Stats.Health}</color>\n" +
+                        $"<color={Damage_color_Hex}>Damage:</color>\n" +
+                        $"<color={Damage_color_Hex}> Physical - {Stats.PhysicalDamage}</color>\n" +
+                        $"<color={Attributes_color_Hex}>Attributes:</color>\n" +
+                        $"<color={Attributes_color_Hex}> Strength: {Stats.Attributes.Strenght}</color>\n" +
+                        $"<color={Attributes_color_Hex}> Dexterity: {Stats.Attributes.Dexterity}</color>\n" +
+                        $"<color={Attributes_color_Hex}> Intelligence: {Stats.Attributes.Intelligence}</color>";
             return stats;
         }
 

@@ -271,6 +271,17 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!114 &490602864 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5033971231894014613, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+  m_PrefabInstance: {fileID: 2439018042891217200}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 148ee4218ac25e940af22a2b1c5996d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,10 +741,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3864797766337887515, guid: ce9da4ef06c8f4c4cb7ecc49e24061bb, type: 3}
-      propertyPath: m_SortingOrder
-      value: 32767
-      objectReference: {fileID: 0}
     - target: {fileID: 6114981245311549314, guid: ce9da4ef06c8f4c4cb7ecc49e24061bb, type: 3}
       propertyPath: m_Name
       value: ToolTipCanvas
@@ -775,6 +782,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31264f04d3da544298299d5be7e9cb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &2439018042891217200
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3914240105281055703, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_Name
+      value: SkillsVisualsRegistry
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252174568575749620, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b43ce805a0945344ba249bd5697946d6, type: 3}
 --- !u!1001 &4278930420695698864
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -896,6 +960,10 @@ PrefabInstance:
       propertyPath: ActorsVisualsRegistry
       value: 
       objectReference: {fileID: 941191289}
+    - target: {fileID: 2399687565716704868, guid: f14ce5aa57fd139459b9c87a906d5394, type: 3}
+      propertyPath: SkillsVisualsRegistry
+      value: 
+      objectReference: {fileID: 490602864}
     - target: {fileID: 4431137846247583925, guid: f14ce5aa57fd139459b9c87a906d5394, type: 3}
       propertyPath: m_Name
       value: GameInit
@@ -1121,3 +1189,4 @@ SceneRoots:
   - {fileID: 5013604865670188782}
   - {fileID: 874184049}
   - {fileID: 558556157}
+  - {fileID: 2439018042891217200}

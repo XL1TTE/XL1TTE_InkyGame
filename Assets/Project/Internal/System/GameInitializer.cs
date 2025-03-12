@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Project.Internal.ActorSystem;
 using Project.Internal.Interactions;
+using Project.Internal.SkillsSystem;
 using Project.Internal.Utilities;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ namespace Project.Internal.System
             yield return context.ActorsVisualsRegistry.Init();
 
             yield return context.ToolTipManager.Init();
+            yield return context.SkillsVisualsRegistry.Init();
 
             //context.GameLoadingScreen.SetActive(false);
         }
@@ -37,6 +39,7 @@ namespace Project.Internal.System
     {
         [SerializeField] public InputManager InputManager;
         [SerializeField] public ActorsVisualsRegistry ActorsVisualsRegistry;
+        [SerializeField] public SkillsVisualsRegistry SkillsVisualsRegistry;
         [SerializeField] public ToolTipManager ToolTipManager;
 
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Project.Internal.ActorSystem;
+using Project.Internal.BattleSystem;
 using Project.Internal.BattleSystem.States;
 using Project.Internal.System;
 using UnityEngine;
@@ -144,6 +145,11 @@ namespace Project.Internal
 
     public class EnemiesStatesEventHandler : SelectablesStatesEventHandler<Enemy>
     {
+        protected BattleManager Context;
+        public EnemiesStatesEventHandler(BattleManager context)
+        {
+            Context = context;
+        }
 
         protected override void OnPointerEnter(BaseEventData eventData)
         {
@@ -151,7 +157,7 @@ namespace Project.Internal
 
             var enemy = pointerEventData.pointerEnter.GetComponent<Enemy>();
             if (enemy != null)
-                BattleStatesManager.CurrentState.OnEnemyPointerEnter(enemy);
+                BattleStatesManager.CurrentState.OnEnemyPointerEnter(enemy, Context);
         }
 
         protected override void OnPointerExit(BaseEventData eventData)
@@ -161,7 +167,66 @@ namespace Project.Internal
 
             var enemy = pointerEventData.pointerEnter.GetComponent<Enemy>();
             if (enemy != null)
-                BattleStatesManager.CurrentState.OnEnemyPointerExit(enemy);
+                BattleStatesManager.CurrentState.OnEnemyPointerExit(enemy, Context);
+        }
+
+        protected override void OnSelect(BaseEventData eventData)
+        {
+            var enemy = eventData.selectedObject.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                BattleStatesManager.CurrentState.OnEnemySelect(enemy, Context);
+            }
+        }
+
+        protected override void OnDeselect(BaseEventData eventData)
+        {
+            var enemy = eventData.selectedObject.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                BattleStatesManager.CurrentState.OnEnemyDeselect(enemy, Context);
+            }
+        }
+    }
+
+    public class HeroesStatesEventHandler : SelectablesStatesEventHandler<Hero>
+    {
+        protected BattleManager Context;
+        public HeroesStatesEventHandler(BattleManager context)
+        {
+            Context = context;
+        }
+
+
+        protected override void OnSelect(BaseEventData eventData)
+        {
+            var hero = eventData.selectedObject.GetComponent<Hero>();
+            if (hero != null)
+                BattleStatesManager.CurrentState.OnHeroSelect(hero, Context);
+        }
+
+        protected override void OnDeselect(BaseEventData eventData)
+        {
+            var hero = eventData.selectedObject.GetComponent<Hero>();
+            if (hero != null)
+                BattleStatesManager.CurrentState.OnHeroDeselect(hero, Context);
+        }
+    }
+
+    public class HeroSkillsStatesEventHandler : SelectablesStatesEventHandler<Hero>
+    {
+        protected override void OnSelect(BaseEventData eventData)
+        {
+            var hero = eventData.selectedObject.GetComponent<Hero>();
+            if (hero != null)
+            {
+
+            }
+        }
+
+        protected override void OnDeselect(BaseEventData eventData)
+        {
+            base.OnDeselect(eventData);
         }
     }
 

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEngine;
+using Project.Internal.SkillsSystem;
+
 
 namespace Project.Internal.ActorSystem
 {
@@ -19,6 +19,9 @@ namespace Project.Internal.ActorSystem
                         Dexterity = 10.0f,
                         Intelligence = 5.0f
                     }
+                },
+                Skills = new List<BaseSkill>{
+                    SkillsRegistry.GetSkillDataByID("FistPunch")
                 }
             },
             new HeroData{
