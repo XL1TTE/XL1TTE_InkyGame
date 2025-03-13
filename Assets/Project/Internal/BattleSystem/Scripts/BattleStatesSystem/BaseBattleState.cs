@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Project.Internal.ActorSystem;
+using Project.Internal.Interfaces;
 using Project.Internal.SkillsSystem;
+using Project.Internal.UI;
 using Project.Internal.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,25 +23,44 @@ namespace Project.Internal.BattleSystem.States
         protected Vector3 _defaultSkillScale;
         protected Vector3 _defaultEnemyScale;
 
-        public virtual void OnSkillPointerEnter(GameObject skill, BattleManager context)
+        #region Skills
+
+        public virtual void OnSkillPointerEnter(SkillSlot skill, BattleManager context)
         {
             _SkillscaleDownTween.Kill();
-            _defaultSkillScale = skill.transform.localScale;
-            Vector3 newScale = skill.transform.localScale * 1.1f;
-            _SkillscaleUpTween = skill.transform.DOScale(newScale, 0.25f);
+            _defaultSkillScale = skill.gameObject.transform.localScale;
+            Vector3 newScale = skill.gameObject.transform.localScale * 1.1f;
+            _SkillscaleUpTween = skill.gameObject.transform.DOScale(newScale, 0.25f);
         }
 
-        public virtual void OnSkillPointerExit(GameObject skill, BattleManager context)
+        public virtual void OnSkillPointerExit(SkillSlot skill, BattleManager context)
         {
             _SkillscaleUpTween.Kill();
-            _SkillscaleDownTween = skill.transform.DOScale(_defaultSkillScale, 0.25f);
+            _SkillscaleDownTween = skill.gameObject.transform.DOScale(_defaultSkillScale, 0.25f);
         }
+
+        public virtual void OnSkilPointerClick(SkillSlot skill, BattleManager context)
+        {
+
+        }
+
+        public virtual void OnSkillSelect(SkillSlot skill, BattleManager context)
+        {
+
+        }
+        public virtual void OnSkillDeselect(SkillSlot skill, BattleManager context)
+        {
+
+        }
+
+        #endregion
+
+        #region Enimies
 
         public virtual void OnEnemyPointerExit(Enemy enemy, BattleManager context)
         {
             ToolTipManager.HideTooltip();
         }
-
         public virtual void OnEnemyPointerEnter(Enemy enemy, BattleManager context)
         {
             if (enemy == null)
@@ -49,6 +71,15 @@ namespace Project.Internal.BattleSystem.States
             ToolTipManager.ShowTooltip(enemy_data.ActorName, $"{enemy_data.GetAllStatsInString()}");
         }
 
+        public virtual void OnEnemyLeftMouseButtonClick(Enemy enemy, BattleManager context)
+        {
+
+        }
+
+        public virtual void OnEmemyRightMouseButtonClick(Enemy enemy, BattleManager context)
+        {
+
+        }
         public virtual void OnEnemySelect(Enemy enemy, BattleManager context)
         {
             var enemy_data = enemy.GetActorData<EnemyData>();
@@ -60,15 +91,17 @@ namespace Project.Internal.BattleSystem.States
             }
 
             _SkillscaleDownTween.Kill();
-            _defaultEnemyScale = enemy.gameObject.transform.localScale;
             Vector3 newScale = enemy.gameObject.transform.localScale * 1.1f;
             _SkillscaleUpTween = enemy.gameObject.transform.DOScale(newScale, 0.25f);
         }
         public virtual void OnEnemyDeselect(Enemy enemy, BattleManager context)
         {
             _ActorScaleUpTween.Kill();
-            _ActorScaleDownTween = enemy.gameObject.transform.DOScale(_defaultEnemyScale, 0.25f);
+            _ActorScaleDownTween = enemy.gameObject.transform.DOScale(1, 0.25f);
         }
+        #endregion
+
+        #region Heroes
 
         public virtual void OnHeroSelect(Hero hero, BattleManager context)
         {
@@ -85,6 +118,8 @@ namespace Project.Internal.BattleSystem.States
         {
 
         }
+
+        #endregion
     }
 
     public class PlayerTurnBattleState : BaseBattleState
@@ -139,6 +174,15 @@ namespace Project.Internal.BattleSystem.States
         {
             base.OnHeroDeselect(hero, context);
         }
+
+        public override void OnSkillSelect(SkillSlot skill, BattleManager context)
+        {
+            var skill_state = BattleStatesManager.SetCurrentState<SkillUsingBattleState>();
+            skill_state.UsingSkill = skill.AttachedSkill;
+
+            skill_state.InitialVisualsExecute();
+        }
+
     }
 
     public class EnemyTurnBattleState : BaseBattleState
@@ -159,4 +203,82 @@ namespace Project.Internal.BattleSystem.States
             base.OnEnemyPointerExit(enemy, context);
         }
     }
+
+
+    public class SkillUsingBattleState : BaseBattleState
+    {
+        public BaseSkill UsingSkill;
+        protected List<IDamagable> Targets = new();
+
+        public void InitialVisualsExecute()
+        {
+            ToolTipManager.ShowTooltip($"Цели:", $"{Targets.Count}/{UsingSkill.SkillInfo.MaxTargets}");
+        }
+
+        public override void OnEnemyLeftMouseButtonClick(Enemy enemy, BattleManager context)
+        {
+
+            if (UsingSkill == null)
+            {
+                return;
+            }
+
+
+            if (Targets.Count < UsingSkill.SkillInfo.MaxTargets)
+            {
+                Targets.Add(enemy);
+            }
+
+            ToolTipManager.ShowTooltip($"Цели:", $"{Targets.Count}/{UsingSkill.SkillInfo.MaxTargets}");
+
+            if (Targets.Count == UsingSkill.SkillInfo.MaxTargets)
+            {
+                UsingSkill.Execute(Targets);
+                Targets.Clear();
+
+                ToolTipManager.HideTooltip();
+                BattleStatesManager.ToPreviousState();
+            }
+
+
+        }
+
+        public override void OnEmemyRightMouseButtonClick(Enemy enemy, BattleManager context)
+        {
+            if (Targets.Count > 0 && Targets.Contains(enemy))
+            {
+                Targets.Remove(enemy);
+            }
+        }
+        public override void OnHeroSelect(Hero hero, BattleManager context)
+        {
+
+        }
+
+        public override void OnHeroDeselect(Hero hero, BattleManager context)
+        {
+
+        }
+
+        public override void OnEnemySelect(Enemy enemy, BattleManager context)
+        {
+
+        }
+
+        public override void OnEnemyDeselect(Enemy enemy, BattleManager context)
+        {
+
+        }
+
+        public override void OnEnemyPointerEnter(Enemy enemy, BattleManager context)
+        {
+
+        }
+
+        public override void OnEnemyPointerExit(Enemy enemy, BattleManager context)
+        {
+
+        }
+    }
+
 }

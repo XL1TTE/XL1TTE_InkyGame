@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Project.Internal.ActorSystem;
 using Project.Internal.BattleSystem;
 using Project.Internal.BattleSystem.States;
+using Project.Internal.SkillsSystem;
 using Project.Internal.System;
+using Project.Internal.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -98,6 +101,19 @@ namespace Project.Internal
             };
             PointerExitEntry.callback.AddListener(OnPointerExit);
             trigger.triggers.Add(PointerExitEntry);
+
+            EventTrigger.Entry OnPointerClickEntry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerClick
+            };
+            OnPointerClickEntry.callback.AddListener(OnPointerClick);
+            trigger.triggers.Add(OnPointerClickEntry);
+
+        }
+
+        protected virtual void OnPointerClick(BaseEventData eventData)
+        {
+
         }
 
         protected virtual void RemoveListeners(Selectable selectable)
@@ -170,6 +186,27 @@ namespace Project.Internal
                 BattleStatesManager.CurrentState.OnEnemyPointerExit(enemy, Context);
         }
 
+        protected override void OnPointerClick(BaseEventData eventData)
+        {
+            PointerEventData pointerEventData = eventData as PointerEventData;
+
+            var enemy = pointerEventData.pointerEnter.GetComponent<Enemy>();
+
+            if (pointerEventData != null && enemy != null)
+            {
+                switch (pointerEventData.button)
+                {
+                    case PointerEventData.InputButton.Left:
+                        BattleStatesManager.CurrentState.OnEnemyLeftMouseButtonClick(enemy, Context);
+                        break;
+                    case PointerEventData.InputButton.Right:
+                        BattleStatesManager.CurrentState.OnEmemyRightMouseButtonClick(enemy, Context);
+                        break;
+                }
+
+            }
+        }
+
         protected override void OnSelect(BaseEventData eventData)
         {
             var enemy = eventData.selectedObject.GetComponent<Enemy>();
@@ -213,14 +250,20 @@ namespace Project.Internal
         }
     }
 
-    public class HeroSkillsStatesEventHandler : SelectablesStatesEventHandler<Hero>
+    public class HeroSkillsStatesEventHandler : SelectablesStatesEventHandler<SkillSlot>
     {
+        public BattleManager Context;
+        public HeroSkillsStatesEventHandler(BattleManager context)
+        {
+            Context = context;
+        }
         protected override void OnSelect(BaseEventData eventData)
         {
-            var hero = eventData.selectedObject.GetComponent<Hero>();
-            if (hero != null)
-            {
+            var skill = eventData.selectedObject.GetComponent<SkillSlot>();
 
+            if (skill != null && skill.AttachedSkill != null)
+            {
+                BattleStatesManager.CurrentState.OnSkillSelect(skill, Context);
             }
         }
 

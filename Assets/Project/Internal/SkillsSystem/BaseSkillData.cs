@@ -27,7 +27,7 @@ namespace Project.Internal.SkillsSystem
     {
         public SkillInfo SkillInfo;
 
-        public abstract void Execute(List<GameObject> targets);
+        public abstract void Execute(List<IDamagable> targets);
 
         public abstract BaseSkill Clone();
     }
@@ -41,15 +41,12 @@ namespace Project.Internal.SkillsSystem
             return clone;
         }
 
-        public override void Execute(List<GameObject> targets)
+        public override void Execute(List<IDamagable> targets)
         {
             if (targets.Count > 0)
             {
-                var target = targets[0].GetComponent<IDamagable>();
-                if (target != null)
-                {
+                foreach (var target in targets)
                     target.GetDamage(SkillInfo.Damage);
-                }
             }
         }
     }

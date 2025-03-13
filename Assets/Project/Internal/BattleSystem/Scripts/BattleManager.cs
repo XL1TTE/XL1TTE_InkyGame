@@ -77,7 +77,15 @@ namespace Project.Internal.BattleSystem
                 }
             }
 
+            // SETUP HEROES SKILLS SLOTS
+            foreach (var skill_slot in context.UI.ActorSkills_Frames)
+            {
+                context.SkillsEventHandler.AddSubject(skill_slot);
+            }
+
+
             context.HeroesEventHandler.Apply();
+            context.SkillsEventHandler.Apply();
 
             yield return null;
         }
@@ -131,7 +139,7 @@ namespace Project.Internal.BattleSystem
 
         public EnemiesStatesEventHandler EnemiesEventHandler;
         public HeroesStatesEventHandler HeroesEventHandler;
-
+        public HeroSkillsStatesEventHandler SkillsEventHandler;
         public BattleUI_Context UI;
 
         #endregion
@@ -142,6 +150,8 @@ namespace Project.Internal.BattleSystem
             EnemiesEventHandler = new EnemiesStatesEventHandler(this);
 
             HeroesEventHandler = new HeroesStatesEventHandler(this);
+
+            SkillsEventHandler = new HeroSkillsStatesEventHandler(this);
 
 
             InteractionManager interactions = new InteractionManager();
