@@ -47,6 +47,8 @@ namespace Project.Internal.BattleSystem
                     context.EnemiesEventHandler.AddSubject(enemy);
 
                     context.EnemiesInBattle.Add(enemy);
+
+                    enemy.OnDamageTaken += FloatingDamageManager.instance.OnEnemyDamageTaken;
                     yield return null;
                 }
             }

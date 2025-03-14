@@ -21,6 +21,8 @@ namespace Project.Internal.System
             yield return context.ToolTipManager.Init();
             yield return context.SkillsVisualsRegistry.Init();
 
+            yield return context.FloatingDamageManager.Init();
+
             //context.GameLoadingScreen.SetActive(false);
         }
     }
@@ -41,6 +43,8 @@ namespace Project.Internal.System
         [SerializeField] public ActorsVisualsRegistry ActorsVisualsRegistry;
         [SerializeField] public SkillsVisualsRegistry SkillsVisualsRegistry;
         [SerializeField] public ToolTipManager ToolTipManager;
+
+        [SerializeField] public FloatingDamageManager FloatingDamageManager;
 
 
         [Header("Game initializing setups")]

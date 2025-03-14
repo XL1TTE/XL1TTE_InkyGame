@@ -19,7 +19,7 @@ namespace Project.Internal.Utilities
                 tooltipInstance = TooltipInstance;
 
             }
-            tooltipInstance.gameObject.SetActive(false);
+            tooltipInstance.Hide();
             yield return null;
         }
 
@@ -30,7 +30,7 @@ namespace Project.Internal.Utilities
                 tooltipInstance.Header.text = header;
                 tooltipInstance.Message.text = message;
 
-                tooltipInstance.gameObject.SetActive(true);
+                tooltipInstance.Show();
             }
         }
 
@@ -38,7 +38,7 @@ namespace Project.Internal.Utilities
         {
             if (tooltipInstance != null)
             {
-                tooltipInstance.gameObject.SetActive(false);
+                tooltipInstance.Hide();
             }
         }
 

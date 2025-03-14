@@ -11,9 +11,11 @@ namespace Project.Internal.ActorSystem
             new HeroData{
                 ActorID = "Warrior",
                 ActorName = "Victor",
-                Stats = new HeroStats{
+                Stats = new BaseActorStats{
                     Health = 250.0f,
-                    PhysicalDamage = 10.0f,
+                    DamageStats = new DamageStats{
+                        PhysicalDamage = 15.0f
+                    },
                     Attributes = new ActorAttributes{
                         Strenght = 15.0f,
                         Dexterity = 10.0f,
@@ -27,35 +29,48 @@ namespace Project.Internal.ActorSystem
             new HeroData{
                 ActorID = "Mage",
                 ActorName = "Elizabeth",
-                Stats = new HeroStats{
+                Stats = new BaseActorStats{
                     Health = 100.0f,
-                    PhysicalDamage = 1.0f,
+                    DamageStats = new DamageStats{
+                        PhysicalDamage = 1.0f
+                    },
                     Attributes = new ActorAttributes{
                         Strenght = 5.0f,
                         Dexterity = 5.0f,
                         Intelligence = 15.0f
                     }
+                },
+                Skills = new List<BaseSkill>{
+                    SkillsRegistry.GetSkillDataByID("FistPunch")
                 }
             },
             new HeroData{
                 ActorID = "Ranger",
                 ActorName = "Robin",
-                Stats = new HeroStats{
+                Stats = new BaseActorStats{
                     Health = 150.0f,
-                    PhysicalDamage = 10.0f,
+                    DamageStats = new DamageStats{
+                        PhysicalDamage = 10.0f
+                    },
                     Attributes = new ActorAttributes{
                         Strenght = 7.5f,
                         Dexterity = 15.0f,
                         Intelligence = 7.5f
                     }
+                },
+                Skills = new List<BaseSkill>{
+                    SkillsRegistry.GetSkillDataByID("FistPunch"),
+                    SkillsRegistry.GetSkillDataByID("BowFire")
                 }
             },
             new HeroData{
                 ActorID = "Rogue",
                 ActorName = "Kate",
-                Stats = new HeroStats{
+                Stats = new BaseActorStats{
                     Health = 100.0f,
-                    PhysicalDamage = 25.0f,
+                    DamageStats = new DamageStats{
+                        PhysicalDamage = 25.0f
+                    },
                     Attributes = new ActorAttributes{
                         Strenght = 10.0f,
                         Dexterity = 25.0f,
@@ -69,27 +84,31 @@ namespace Project.Internal.ActorSystem
             new EnemyData{
                 ActorID = "Witch",
                 ActorName = "Witch",
-                Stats = new EnemyStats{
+                Stats = new BaseActorStats{
                     Health = 250.0f,
                     Attributes = new ActorAttributes{
                         Strenght = 5,
                         Intelligence = 15,
                         Dexterity = 5
                     },
-                    PhysicalDamage = 0f
+                    DamageStats = new DamageStats{
+                        PhysicalDamage = 15.0f
+                    },
                 }
             },
             new EnemyData{
                 ActorID = "Wolf",
                 ActorName = "Wolf",
-                Stats = new EnemyStats{
+                Stats = new BaseActorStats{
                     Health = 150,
                     Attributes = new ActorAttributes{
                         Strenght = 10,
                         Intelligence = 5,
                         Dexterity = 15
                     },
-                    PhysicalDamage = 2f
+                    DamageStats = new DamageStats{
+                        PhysicalDamage = 15.0f
+                    },
                 }
             }
         };

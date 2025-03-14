@@ -109,12 +109,15 @@ namespace Project.Internal
             OnPointerClickEntry.callback.AddListener(OnPointerClick);
             trigger.triggers.Add(OnPointerClickEntry);
 
+            EventTrigger.Entry OnSubmitEntry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.Submit
+            };
+            OnSubmitEntry.callback.AddListener(OnSubmit);
+            trigger.triggers.Add(OnSubmitEntry);
+
         }
 
-        protected virtual void OnPointerClick(BaseEventData eventData)
-        {
-
-        }
 
         protected virtual void RemoveListeners(Selectable selectable)
         {
@@ -124,6 +127,12 @@ namespace Project.Internal
                 return;
             }
             trigger.triggers.Clear();
+        }
+
+
+        protected virtual void OnPointerClick(BaseEventData eventData)
+        {
+
         }
 
         protected virtual void OnPointerExit(BaseEventData eventData)
@@ -138,24 +147,16 @@ namespace Project.Internal
 
         protected virtual void OnDeselect(BaseEventData eventData)
         {
-            Selectable selectable = eventData.selectedObject.GetComponent<Selectable>();
         }
 
         protected virtual void OnSelect(BaseEventData eventData)
         {
-            _lastSelected = eventData.selectedObject.GetComponent<Selectable>();
-
         }
 
-
-
-        protected virtual void OnNavigate(InputAction.CallbackContext context)
+        protected virtual void OnSubmit(BaseEventData eventData)
         {
-            if (EventSystem.current.currentSelectedGameObject == null && _lastSelected != null)
-            {
-                EventSystem.current.SetSelectedGameObject(_lastSelected.gameObject);
-            }
         }
+
     }
 
 
@@ -257,11 +258,45 @@ namespace Project.Internal
         {
             Context = context;
         }
+
+        protected override void OnPointerClick(BaseEventData eventData)
+        {
+            var skill = eventData.selectedObject.GetComponent<SkillSlot>();
+
+            if (skill != null)
+            {
+                BattleStatesManager.CurrentState.OnSkilPointerClick(skill, Context);
+            }
+        }
+
+        protected override void OnPointerEnter(BaseEventData eventData)
+        {
+            PointerEventData pointerEventData = eventData as PointerEventData;
+
+            var skill_slot = pointerEventData.pointerEnter.GetComponentInParent<SkillSlot>();
+
+            if (skill_slot != null)
+            {
+                BattleStatesManager.CurrentState.OnSkillPointerEnter(skill_slot, Context);
+            }
+        }
+
+        protected override void OnPointerExit(BaseEventData eventData)
+        {
+            PointerEventData pointerEventData = eventData as PointerEventData;
+
+            var skill_slot = pointerEventData.pointerEnter.GetComponentInParent<SkillSlot>();
+
+            if (skill_slot != null)
+            {
+                BattleStatesManager.CurrentState.OnSkillPointerExit(skill_slot, Context);
+            }
+        }
         protected override void OnSelect(BaseEventData eventData)
         {
             var skill = eventData.selectedObject.GetComponent<SkillSlot>();
 
-            if (skill != null && skill.AttachedSkill != null)
+            if (skill != null /*&& skill.AttachedSkill != null*/)
             {
                 BattleStatesManager.CurrentState.OnSkillSelect(skill, Context);
             }
@@ -269,8 +304,25 @@ namespace Project.Internal
 
         protected override void OnDeselect(BaseEventData eventData)
         {
-            base.OnDeselect(eventData);
+            var skill = eventData.selectedObject.GetComponent<SkillSlot>();
+
+            if (skill != null)
+            {
+                BattleStatesManager.CurrentState.OnSkillDeselect(skill, Context);
+            }
         }
+
+
+        protected override void OnSubmit(BaseEventData eventData)
+        {
+            var skill = eventData.selectedObject.GetComponent<SkillSlot>();
+
+            if (skill != null)
+            {
+                BattleStatesManager.CurrentState.OnSkillSubmit(skill, Context);
+            }
+        }
+
     }
 
 

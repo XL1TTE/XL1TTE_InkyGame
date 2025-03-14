@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Project.Internal.Interfaces;
 using Project.Internal.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,10 @@ namespace Project.Internal.BattleSystem.States
 {
     public static class BattleStatesManager
     {
+
+        public static ISkillsUser LastSelectedSkillUser;
+
+
         public static BaseBattleState CurrentState;
         public static BaseBattleState PreviousState;
 

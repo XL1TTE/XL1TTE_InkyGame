@@ -8,7 +8,7 @@ namespace Project.Internal.ActorSystem
 {
     public class HeroData : BaseActorData
     {
-        public HeroStats Stats { get; set; }
+        public BaseActorStats Stats { get; set; }
 
         public List<BaseSkill> Skills { get; set; } = new();
 
@@ -31,7 +31,7 @@ namespace Project.Internal.ActorSystem
 
             var stats = $"<color={Health_color_Hex}>Health: {Stats.Health}</color>\n" +
                         $"<color={Damage_color_Hex}>Damage:</color>\n" +
-                        $"<color={Damage_color_Hex}> Physical - {Stats.PhysicalDamage}</color>\n" +
+                        $"<color={Damage_color_Hex}> Physical - {Stats.DamageStats.PhysicalDamage}</color>\n" +
                         $"<color={Attributes_color_Hex}>Attributes:</color>\n" +
                         $"<color={Attributes_color_Hex}> Strength: {Stats.Attributes.Strenght}</color>\n" +
                         $"<color={Attributes_color_Hex}> Dexterity: {Stats.Attributes.Dexterity}</color>\n" +

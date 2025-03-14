@@ -10,13 +10,21 @@ namespace Project.Internal.Utilities
         [SerializeField] public TextMeshProUGUI Header;
         [SerializeField] public TextMeshProUGUI Message;
 
+        public void Show()
+        {
+            UpdateTooltipPosition();
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
         private void UpdateTooltipPosition()
         {
-            if (gameObject.activeSelf)
-            {
-                Vector3 mousePosition = Input.mousePosition;
-                transform.position = new Vector3(mousePosition.x + 10, mousePosition.y - 10, mousePosition.z);
-            }
+            Vector3 mousePosition = Input.mousePosition;
+            transform.position = new Vector3(mousePosition.x + 10, mousePosition.y - 10, mousePosition.z);
         }
 
         private void Update()

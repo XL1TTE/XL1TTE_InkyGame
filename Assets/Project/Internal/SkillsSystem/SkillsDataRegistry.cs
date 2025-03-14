@@ -11,7 +11,13 @@ namespace Project.Internal.SkillsSystem
             new FistPunchSkill{
                 SkillInfo = new SkillInfo("FistPunch", "FistPunch"){
                     Damage = 10.0f,
-                    MaxTargets = 3,
+                    MaxTargets = 1,
+                }
+            },
+            new BowFireSKill{
+                SkillInfo = new SkillInfo("BowFire", "BowFire"){
+                    Damage = 15.0f,
+                    MaxTargets = 3
                 }
             }
         };

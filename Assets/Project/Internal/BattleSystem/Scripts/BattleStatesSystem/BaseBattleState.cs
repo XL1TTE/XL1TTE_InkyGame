@@ -14,43 +14,44 @@ namespace Project.Internal.BattleSystem.States
 {
     public abstract class BaseBattleState
     {
-        protected Tween _SkillscaleUpTween;
-        protected Tween _SkillscaleDownTween;
-
         protected Tween _ActorScaleUpTween;
         protected Tween _ActorScaleDownTween;
 
-        protected Vector3 _defaultSkillScale;
         protected Vector3 _defaultEnemyScale;
+
+
 
         #region Skills
 
         public virtual void OnSkillPointerEnter(SkillSlot skill, BattleManager context)
         {
-            _SkillscaleDownTween.Kill();
-            _defaultSkillScale = skill.gameObject.transform.localScale;
-            Vector3 newScale = skill.gameObject.transform.localScale * 1.1f;
-            _SkillscaleUpTween = skill.gameObject.transform.DOScale(newScale, 0.25f);
+            EventSystem.current.SetSelectedGameObject(skill.gameObject);
         }
 
         public virtual void OnSkillPointerExit(SkillSlot skill, BattleManager context)
         {
-            _SkillscaleUpTween.Kill();
-            _SkillscaleDownTween = skill.gameObject.transform.DOScale(_defaultSkillScale, 0.25f);
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         public virtual void OnSkilPointerClick(SkillSlot skill, BattleManager context)
         {
+            var skill_state = BattleStatesManager.SetCurrentState<SkillUsingBattleState>();
 
+            skill_state.Setup(BattleStatesManager.LastSelectedSkillUser, skill);
         }
 
         public virtual void OnSkillSelect(SkillSlot skill, BattleManager context)
         {
-
+            skill.DOSelectAnimation();
         }
         public virtual void OnSkillDeselect(SkillSlot skill, BattleManager context)
         {
+            skill.DODeselectAnimation();
+        }
 
+        public virtual void OnSkillSubmit(SkillSlot skill, BattleManager context)
+        {
+            OnSkilPointerClick(skill, context);
         }
 
         #endregion
@@ -89,14 +90,11 @@ namespace Project.Internal.BattleSystem.States
                 context.UI.ActorNameTextMesh.text = enemy_data.ActorName;
                 context.UI.ActorStatsTextMesh.text = enemy_data.GetAllStatsInString();
             }
-
-            _SkillscaleDownTween.Kill();
             Vector3 newScale = enemy.gameObject.transform.localScale * 1.1f;
-            _SkillscaleUpTween = enemy.gameObject.transform.DOScale(newScale, 0.25f);
+            _ActorScaleUpTween = enemy.gameObject.transform.DOScale(newScale, 0.25f);
         }
         public virtual void OnEnemyDeselect(Enemy enemy, BattleManager context)
         {
-            _ActorScaleUpTween.Kill();
             _ActorScaleDownTween = enemy.gameObject.transform.DOScale(1, 0.25f);
         }
         #endregion
@@ -105,6 +103,7 @@ namespace Project.Internal.BattleSystem.States
 
         public virtual void OnHeroSelect(Hero hero, BattleManager context)
         {
+            BattleStatesManager.LastSelectedSkillUser = hero;
             var hero_data = hero.GetActorData<HeroData>();
             if (hero != null)
             {
@@ -124,6 +123,7 @@ namespace Project.Internal.BattleSystem.States
 
     public class PlayerTurnBattleState : BaseBattleState
     {
+
         public override void OnEnemySelect(Enemy enemy, BattleManager context)
         {
             base.OnEnemySelect(enemy, context);
@@ -137,7 +137,6 @@ namespace Project.Internal.BattleSystem.States
         public override void OnHeroSelect(Hero hero, BattleManager context)
         {
             base.OnHeroSelect(hero, context);
-
 
             //CLEARING OUTDATED SKILLS IN UI
             foreach (var skill_slot in context.UI.ActorSkills_Frames)
@@ -177,11 +176,15 @@ namespace Project.Internal.BattleSystem.States
 
         public override void OnSkillSelect(SkillSlot skill, BattleManager context)
         {
-            var skill_state = BattleStatesManager.SetCurrentState<SkillUsingBattleState>();
-            skill_state.UsingSkill = skill.AttachedSkill;
 
-            skill_state.InitialVisualsExecute();
+            base.OnSkillSelect(skill, context);
+
         }
+        public override void OnSkillDeselect(SkillSlot skill, BattleManager context)
+        {
+            base.OnSkillDeselect(skill, context);
+        }
+
 
     }
 
@@ -194,7 +197,7 @@ namespace Project.Internal.BattleSystem.States
                 return;
             }
             var enemy_data = enemy.GetActorData<EnemyData>();
-            ToolTipManager.ShowTooltip(enemy_data.ActorName, $"{enemy_data.Stats.PhysicalDamage} урона!");
+            ToolTipManager.ShowTooltip(enemy_data.ActorName, $"{enemy_data.Stats.DamageStats.PhysicalDamage} урона!");
         }
 
 
@@ -207,12 +210,43 @@ namespace Project.Internal.BattleSystem.States
 
     public class SkillUsingBattleState : BaseBattleState
     {
-        public BaseSkill UsingSkill;
+        protected BaseSkill UsingSkill;
+        protected SkillSlot SkillSlot;
+
+        protected ISkillsUser SkillOwner;
         protected List<IDamagable> Targets = new();
 
-        public void InitialVisualsExecute()
+        public void Setup(ISkillsUser SkillOwner, SkillSlot skill_slot)
         {
-            ToolTipManager.ShowTooltip($"Цели:", $"{Targets.Count}/{UsingSkill.SkillInfo.MaxTargets}");
+            SkillSlot = skill_slot;
+            SkillSlot.LockAnimationState(true);
+
+            UsingSkill = skill_slot.AttachedSkill;
+
+            this.SkillOwner = SkillOwner;
+
+            if (UsingSkill != null)
+                ToolTipManager.ShowTooltip($"Targets:", $"{Targets.Count}/{UsingSkill.SkillInfo.MaxTargets}");
+        }
+
+        public override void OnSkillSubmit(SkillSlot skill, BattleManager context)
+        {
+            if (skill != SkillSlot)
+            {
+                SkillSlot.LockAnimationState(false);
+                SkillSlot.DODeselectAnimation();
+            }
+            base.OnSkillSubmit(skill, context);
+        }
+
+        public override void OnSkilPointerClick(SkillSlot skill, BattleManager context)
+        {
+            if (skill != SkillSlot)
+            {
+                SkillSlot.LockAnimationState(false);
+                SkillSlot.DODeselectAnimation();
+            }
+            base.OnSkilPointerClick(skill, context);
         }
 
         public override void OnEnemyLeftMouseButtonClick(Enemy enemy, BattleManager context)
@@ -229,35 +263,50 @@ namespace Project.Internal.BattleSystem.States
                 Targets.Add(enemy);
             }
 
-            ToolTipManager.ShowTooltip($"Цели:", $"{Targets.Count}/{UsingSkill.SkillInfo.MaxTargets}");
+            ToolTipManager.ShowTooltip($"Targets:", $"{Targets.Count}/{UsingSkill.SkillInfo.MaxTargets}");
 
             if (Targets.Count == UsingSkill.SkillInfo.MaxTargets)
             {
-                UsingSkill.Execute(Targets);
+                UsingSkill.Execute(Targets, SkillOwner);
                 Targets.Clear();
 
-                ToolTipManager.HideTooltip();
-                BattleStatesManager.ToPreviousState();
+                ComebackToPlayerTurnState();
             }
 
 
+        }
+        private void ComebackToPlayerTurnState()
+        {
+
+            ToolTipManager.HideTooltip();
+
+            SkillSlot.LockAnimationState(false);
+            SkillSlot.DODeselectAnimation();
+
+            BattleStatesManager.SetCurrentState<PlayerTurnBattleState>();
         }
 
         public override void OnEmemyRightMouseButtonClick(Enemy enemy, BattleManager context)
         {
+            if (Targets.Count == 0)
+            {
+                ComebackToPlayerTurnState();
+                return;
+            }
+
             if (Targets.Count > 0 && Targets.Contains(enemy))
             {
                 Targets.Remove(enemy);
             }
+            ToolTipManager.ShowTooltip($"Targets:", $"{Targets.Count}/{UsingSkill.SkillInfo.MaxTargets}");
         }
+
+
         public override void OnHeroSelect(Hero hero, BattleManager context)
         {
-
         }
-
         public override void OnHeroDeselect(Hero hero, BattleManager context)
         {
-
         }
 
         public override void OnEnemySelect(Enemy enemy, BattleManager context)
@@ -279,6 +328,7 @@ namespace Project.Internal.BattleSystem.States
         {
 
         }
+
     }
 
 }

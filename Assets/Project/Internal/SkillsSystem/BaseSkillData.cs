@@ -27,9 +27,10 @@ namespace Project.Internal.SkillsSystem
     {
         public SkillInfo SkillInfo;
 
-        public abstract void Execute(List<IDamagable> targets);
+        public abstract void Execute(List<IDamagable> targets, ISkillsUser skillUser);
 
         public abstract BaseSkill Clone();
+
     }
 
     public class FistPunchSkill : BaseSkill
@@ -41,15 +42,41 @@ namespace Project.Internal.SkillsSystem
             return clone;
         }
 
-        public override void Execute(List<IDamagable> targets)
+        public override void Execute(List<IDamagable> targets, ISkillsUser skillUser)
         {
             if (targets.Count > 0)
             {
+                var stats = skillUser.GetAllStats();
+
+                var user_damage = stats.DamageStats.PhysicalDamage;
+
                 foreach (var target in targets)
-                    target.GetDamage(SkillInfo.Damage);
+                    target.GetDamage(SkillInfo.Damage + user_damage);
             }
         }
     }
 
+    public class BowFireSKill : BaseSkill
+    {
+        public override BaseSkill Clone()
+        {
+            var clone = new BowFireSKill();
+            clone.SkillInfo = this.SkillInfo;
+            return clone;
+        }
 
+        public override void Execute(List<IDamagable> targets, ISkillsUser skillUser)
+        {
+            if (targets.Count > 0)
+            {
+                var stats = skillUser.GetAllStats();
+
+                var user_damage = stats.DamageStats.PhysicalDamage;
+
+                foreach (var target in targets)
+                    target.GetDamage(SkillInfo.Damage + user_damage);
+            }
+        }
+
+    }
 }
