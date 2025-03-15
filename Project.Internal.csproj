@@ -68,14 +68,19 @@
     <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\Hero.cs" />
     <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsData\EnemyData.cs" />
     <Compile Include="Assets\Project\Internal\Interfaces\IDamagable.cs" />
+    <Compile Include="Assets\Project\Internal\SkillsSystem\SkillVisual.cs" />
+    <Compile Include="Assets\Project\Internal\System\Main.cs" />
+    <Compile Include="Assets\Project\Internal\CMS\CMS.cs" />
     <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsData\HeroData.cs" />
+    <Compile Include="Assets\Project\Internal\CMS\CMSEntity.cs" />
     <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsRegistry\ActorsVisualsRegistry.cs" />
     <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsFactory\ActorFactory.cs" />
     <Compile Include="Assets\Project\Internal\Interactions\InteractionBase.cs" />
     <Compile Include="Assets\Project\Internal\UI\DynamicelectablesEventHandler.cs" />
     <Compile Include="Assets\Project\Internal\System\Scripts\InputManager.cs" />
-    <Compile Include="Assets\Project\Internal\SkillsSystem\BaseSkill.cs" />
+    <Compile Include="Assets\Project\Internal\CMS\CMSTable.cs" />
     <Compile Include="Assets\Project\Internal\UI\BattleUI\BattleUI_Context.cs" />
+    <Compile Include="Assets\Project\Internal\CMS\EntityComponentDefinition.cs" />
     <Compile Include="Assets\Project\Internal\BattleSystem\Scripts\BattleStatesSystem\BaseBattleState.cs" />
     <Compile Include="Assets\Project\Internal\BattleSystem\Scripts\BattleManager.cs" />
     <Compile Include="Assets\Project\Internal\SkillsSystem\SkillsVisualsRegistry.cs" />
@@ -87,6 +92,7 @@
     <Compile Include="Assets\Project\Internal\Utilities\FloatingDamage\FloatingDamageManager.cs" />
     <Compile Include="Assets\Project\Internal\Utilities\ToolTip.cs" />
     <Compile Include="Assets\Project\Internal\SkillsSystem\SkillsDataRegistry.cs" />
+    <Compile Include="Assets\Project\Internal\CMS\CMSUtil.cs" />
     <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorsRegistry\ActorsDataRegistry.cs" />
     <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\BaseActor.cs" />
     <Compile Include="Assets\Project\Internal\SkillsSystem\BaseSkillData.cs" />
@@ -94,12 +100,14 @@
     <Compile Include="Assets\Project\Internal\Utilities\SelectableNavigationUtility.cs" />
     <Compile Include="Assets\Project\Internal\Interfaces\ISkillsUser.cs" />
     <Compile Include="Assets\Project\Internal\UI\BattleUI\SkillSlot.cs" />
+    <Compile Include="Assets\Project\Internal\CMS\AnythingTag.cs" />
     <Compile Include="Assets\Project\Internal\Utilities\SpawnerUtility.cs" />
     <Compile Include="Assets\Project\Internal\Utilities\ToolTipManager.cs" />
     <Compile Include="Assets\Project\Internal\ActorsSystem\Scripts\ActorStats\BaseActorStats.cs" />
     <Compile Include="Assets\Project\Internal\Interactions\InteractionsInterfaces.cs" />
     <Compile Include="Assets\Project\Internal\System\GameInitializer.cs" />
     <Compile Include="Assets\Project\Internal\Utilities\ReflectionUtility.cs" />
+    <Compile Include="Assets\Project\Internal\System\Game.cs" />
     <Compile Include="Assets\Project\Internal\UI\SelectablesStatesEventHandler.cs" />
     <Compile Include="Assets\Project\Internal\Utilities\FloatingDamage\FloatingDamage.cs" />
   </ItemGroup>

@@ -72,14 +72,14 @@ namespace Project.Internal.BattleSystem.States
             ToolTipManager.ShowTooltip(enemy_data.ActorName, $"{enemy_data.GetAllStatsInString()}");
         }
 
-        public virtual void OnEnemyLeftMouseButtonClick(Enemy enemy, BattleManager context)
+        public virtual IEnumerator OnEnemyLeftMouseButtonClick(Enemy enemy, BattleManager context)
         {
-
+            yield return null;
         }
 
-        public virtual void OnEmemyRightMouseButtonClick(Enemy enemy, BattleManager context)
+        public virtual IEnumerator OnEmemyRightMouseButtonClick(Enemy enemy, BattleManager context)
         {
-
+            yield return null;
         }
         public virtual void OnEnemySelect(Enemy enemy, BattleManager context)
         {
@@ -210,6 +210,8 @@ namespace Project.Internal.BattleSystem.States
 
     public class SkillUsingBattleState : BaseBattleState
     {
+
+        protected bool IsAnySkillExecuting = false;
         protected BaseSkill UsingSkill;
         protected SkillSlot SkillSlot;
 
@@ -241,6 +243,12 @@ namespace Project.Internal.BattleSystem.States
 
         public override void OnSkilPointerClick(SkillSlot skill, BattleManager context)
         {
+
+            if (IsAnySkillExecuting)
+            {
+                return;
+            }
+
             if (skill != SkillSlot)
             {
                 SkillSlot.LockAnimationState(false);
@@ -249,12 +257,12 @@ namespace Project.Internal.BattleSystem.States
             base.OnSkilPointerClick(skill, context);
         }
 
-        public override void OnEnemyLeftMouseButtonClick(Enemy enemy, BattleManager context)
+        public override IEnumerator OnEnemyLeftMouseButtonClick(Enemy enemy, BattleManager context)
         {
 
-            if (UsingSkill == null)
+            if (UsingSkill == null || IsAnySkillExecuting)
             {
-                return;
+                yield break;
             }
 
 
@@ -267,7 +275,13 @@ namespace Project.Internal.BattleSystem.States
 
             if (Targets.Count == UsingSkill.SkillInfo.MaxTargets)
             {
-                UsingSkill.Execute(Targets, SkillOwner);
+                IsAnySkillExecuting = true;
+
+                ToolTipManager.HideTooltip();
+                yield return context.StartCoroutine(UsingSkill.Execute(Targets, SkillOwner));
+
+                IsAnySkillExecuting = false;
+
                 Targets.Clear();
 
                 ComebackToPlayerTurnState();
@@ -278,20 +292,18 @@ namespace Project.Internal.BattleSystem.States
         private void ComebackToPlayerTurnState()
         {
 
-            ToolTipManager.HideTooltip();
-
             SkillSlot.LockAnimationState(false);
             SkillSlot.DODeselectAnimation();
 
             BattleStatesManager.SetCurrentState<PlayerTurnBattleState>();
         }
 
-        public override void OnEmemyRightMouseButtonClick(Enemy enemy, BattleManager context)
+        public override IEnumerator OnEmemyRightMouseButtonClick(Enemy enemy, BattleManager context)
         {
             if (Targets.Count == 0)
             {
                 ComebackToPlayerTurnState();
-                return;
+                yield return null;
             }
 
             if (Targets.Count > 0 && Targets.Contains(enemy))

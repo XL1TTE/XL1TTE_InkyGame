@@ -198,10 +198,10 @@ namespace Project.Internal
                 switch (pointerEventData.button)
                 {
                     case PointerEventData.InputButton.Left:
-                        BattleStatesManager.CurrentState.OnEnemyLeftMouseButtonClick(enemy, Context);
+                        Context.StartCoroutine(BattleStatesManager.CurrentState.OnEnemyLeftMouseButtonClick(enemy, Context));
                         break;
                     case PointerEventData.InputButton.Right:
-                        BattleStatesManager.CurrentState.OnEmemyRightMouseButtonClick(enemy, Context);
+                        Context.StartCoroutine(BattleStatesManager.CurrentState.OnEmemyRightMouseButtonClick(enemy, Context));
                         break;
                 }
 

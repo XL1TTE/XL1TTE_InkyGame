@@ -17,5 +17,10 @@ namespace Project.Internal.ActorSystem
             this.GetActorData<EnemyData>().Stats.Health -= damage;
             OnDamageTaken?.Invoke(this, damage);
         }
+
+        public Vector3 GetPosition()
+        {
+            return gameObject.transform.position;
+        }
     }
 }

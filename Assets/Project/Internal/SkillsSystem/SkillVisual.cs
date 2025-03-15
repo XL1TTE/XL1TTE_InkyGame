@@ -12,6 +12,7 @@ namespace Project.Internal.SkillsSystem
         [SerializeField] public string ID;
         [SerializeField] public Sprite SkillIcon;
         protected BaseSkill Skill;
+
         public BaseSkill GetSkill()
         {
             return Skill;

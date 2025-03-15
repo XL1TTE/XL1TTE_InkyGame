@@ -204,7 +204,7 @@ PrefabInstance:
       objectReference: {fileID: 699599053}
     - target: {fileID: 3192797008347914122, guid: fc895465bc9b3c24a818a419515b16e4, type: 3}
       propertyPath: HeroesToSpawn.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3192797008347914122, guid: fc895465bc9b3c24a818a419515b16e4, type: 3}
       propertyPath: EnemiesToSpawn.Array.size
@@ -284,11 +284,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3192797008347914122, guid: fc895465bc9b3c24a818a419515b16e4, type: 3}
       propertyPath: HeroesToSpawn.Array.data[0].ActorDataID
-      value: Mage
+      value: Ranger
       objectReference: {fileID: 0}
     - target: {fileID: 3192797008347914122, guid: fc895465bc9b3c24a818a419515b16e4, type: 3}
       propertyPath: HeroesToSpawn.Array.data[1].ActorDataID
-      value: Warrior
+      value: Mage
       objectReference: {fileID: 0}
     - target: {fileID: 3192797008347914122, guid: fc895465bc9b3c24a818a419515b16e4, type: 3}
       propertyPath: HeroesToSpawn.Array.data[2].ActorDataID
@@ -328,11 +328,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3192797008347914122, guid: fc895465bc9b3c24a818a419515b16e4, type: 3}
       propertyPath: HeroesToSpawn.Array.data[0].ActorVisualID
-      value: Mage
+      value: Ranger
       objectReference: {fileID: 0}
     - target: {fileID: 3192797008347914122, guid: fc895465bc9b3c24a818a419515b16e4, type: 3}
       propertyPath: HeroesToSpawn.Array.data[1].ActorVisualID
-      value: Warrior
+      value: MageMale
       objectReference: {fileID: 0}
     - target: {fileID: 3192797008347914122, guid: fc895465bc9b3c24a818a419515b16e4, type: 3}
       propertyPath: HeroesToSpawn.Array.data[2].ActorVisualID

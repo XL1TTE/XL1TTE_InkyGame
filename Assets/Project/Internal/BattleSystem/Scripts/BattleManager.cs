@@ -155,7 +155,6 @@ namespace Project.Internal.BattleSystem
 
             SkillsEventHandler = new HeroSkillsStatesEventHandler(this);
 
-
             InteractionManager interactions = new InteractionManager();
             interactions.Init();
             foreach (var interaction in interactions.FindAllOf<IOnBattleInitStart>())

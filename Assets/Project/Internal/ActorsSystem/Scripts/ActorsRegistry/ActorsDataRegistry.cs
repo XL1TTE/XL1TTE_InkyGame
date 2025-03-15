@@ -28,7 +28,7 @@ namespace Project.Internal.ActorSystem
             },
             new HeroData{
                 ActorID = "Mage",
-                ActorName = "Elizabeth",
+                ActorName = "Elsen",
                 Stats = new BaseActorStats{
                     Health = 100.0f,
                     DamageStats = new DamageStats{

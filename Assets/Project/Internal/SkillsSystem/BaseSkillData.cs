@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Project.Internal.ActorSystem;
 using Project.Internal.Interfaces;
 using UnityEngine;
@@ -27,7 +28,9 @@ namespace Project.Internal.SkillsSystem
     {
         public SkillInfo SkillInfo;
 
-        public abstract void Execute(List<IDamagable> targets, ISkillsUser skillUser);
+        protected abstract string GetAnimatorTrigger();
+
+        public abstract IEnumerator Execute(List<IDamagable> targets, ISkillsUser skillUser);
 
         public abstract BaseSkill Clone();
 
@@ -42,7 +45,7 @@ namespace Project.Internal.SkillsSystem
             return clone;
         }
 
-        public override void Execute(List<IDamagable> targets, ISkillsUser skillUser)
+        public override IEnumerator Execute(List<IDamagable> targets, ISkillsUser skillUser)
         {
             if (targets.Count > 0)
             {
@@ -50,9 +53,37 @@ namespace Project.Internal.SkillsSystem
 
                 var user_damage = stats.DamageStats.PhysicalDamage;
 
+                var user_animator = skillUser.GetAnimator();
+
+                var user_tranform = skillUser.GetTransform();
+
+                var user_origin_position = user_tranform.position;
+
                 foreach (var target in targets)
+                {
+
+                    var target_position = target.GetPosition() - new Vector3(1.5f, 0f, 0f);
+                    user_tranform.DOMove(target_position, 0.25f);
+
+                    user_animator.SetTrigger(GetAnimatorTrigger());
+
+
+                    yield return new WaitUntil(() => user_animator.GetBool("IsAttackOver"));
+
                     target.GetDamage(SkillInfo.Damage + user_damage);
+
+
+                    yield return new WaitForSeconds(1f);
+                    user_tranform.DOMove(user_origin_position, 0.25f);
+                }
+
             }
+            yield return null;
+        }
+
+        protected override string GetAnimatorTrigger()
+        {
+            return "FistAttack";
         }
     }
 
@@ -65,18 +96,36 @@ namespace Project.Internal.SkillsSystem
             return clone;
         }
 
-        public override void Execute(List<IDamagable> targets, ISkillsUser skillUser)
+        public override IEnumerator Execute(List<IDamagable> targets, ISkillsUser skillUser)
         {
             if (targets.Count > 0)
             {
                 var stats = skillUser.GetAllStats();
-
                 var user_damage = stats.DamageStats.PhysicalDamage;
+                var user_animator = skillUser.GetAnimator();
 
-                foreach (var target in targets)
+                var targetsCopy = new List<IDamagable>(targets);
+
+                foreach (var target in targetsCopy)
+                {
+
+                    user_animator.SetTrigger(GetAnimatorTrigger());
+
+
+                    yield return new WaitUntil(() => user_animator.GetBool("IsAttackOver"));
+
                     target.GetDamage(SkillInfo.Damage + user_damage);
+
+                    yield return new WaitForSeconds(1f);
+
+                }
             }
         }
 
+
+        protected override string GetAnimatorTrigger()
+        {
+            return "BowAttack";
+        }
     }
 }
